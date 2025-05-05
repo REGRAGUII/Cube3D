@@ -6,7 +6,7 @@
 /*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:57 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/05/03 14:22:04 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/04 18:45:31 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ typedef struct c_data
 
 //raycasting functions
 void	render(t_data *data);
-void	draw(char **map1, t_img *img);
+void	draw(t_data *data, t_img *img);
 
 
 

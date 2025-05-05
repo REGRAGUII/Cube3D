@@ -6,13 +6,13 @@
 /*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:30:42 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/04 18:07:55 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/05 03:04:15 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-#define PLAYER_SPEED 0.04
+#define PLAYER_SPEED 0.02
 
 
 double	rad(double angle)
@@ -51,10 +51,62 @@ void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 
 
 
+void draw_3d_walls(t_img *img)
+{
+	int i;
+	int color ;
+	int floor_color;
+	int ceiling_color ;
+	int y;
+	
+	i = 0;
+	while (i < WIDTH)
+	{
+		double dist = img->ray_distances[i];
+		
+		if (dist <= 0)
+			dist = 0.0001;
+		int line_height = (int)(HEIGHT / dist);
+
+		int draw_start = -line_height / 2 + HEIGHT / 2;
+		int draw_end = line_height / 2 + HEIGHT / 2;
+
+		if (draw_start < 0)
+			draw_start = 0;
+		if (draw_end >= HEIGHT)
+			draw_end = HEIGHT - 1;
+
+		if (img->wall_directions[i] == 'N')
+			color = 0xFF0000;
+		if (img->wall_directions[i] == 'S')
+			color = 0x00FF00;
+		if (img->wall_directions[i] == 'E')
+			color = 0x0000FF;
+		if (img->wall_directions[i] == 'W')
+			color = 0xFFFF00;
+		y = 0;
+		while(y < draw_start)
+		{
+			my_mlx_pixel_put(img, i, y, 0xFF00FF);
+			y++;	
+		}
+		while(y < draw_end)
+		{
+			my_mlx_pixel_put(img, i, y, color);
+			y++;	
+		}
+		while(y < HEIGHT)
+		{
+			my_mlx_pixel_put(img, i, y,  0x0FFFF0F0);
+			y++;
+		}
+		i++;
+	}
+}
 
 void draw_view_ray(t_img *img, char **map)
 {
-    int map_size = 30;
+    int map_size = 64;
     int col = 0;
 	
 	while (col < WIDTH)
@@ -116,13 +168,14 @@ void draw_view_ray(t_img *img, char **map)
             if (map[map_y][map_x] == '1')
                 hit = 1;
         }
-		double distance;
-        if (side == 0)
-            distance = (side_dist_x - delta_dist_x);
-        else 
-			distance = (side_dist_y - delta_dist_y);
+		double perp_wall_dist;
+		if (side == 0)
+			perp_wall_dist = side_dist_x - delta_dist_x;
+		else
+			perp_wall_dist = side_dist_y - delta_dist_y;
+		
 			
-        img->ray_distances[col] = distance;
+		img->ray_distances[col] = perp_wall_dist * cos(ray_angle - img->player_angle);
         img->ray_angles[col] = ray_angle;
 
 
@@ -136,7 +189,7 @@ void draw_view_ray(t_img *img, char **map)
         double draw_y = img->player_y * map_size + map_size / 4;
 		
 		int s = 0;
-        while(s < distance * map_size)
+        while(s < perp_wall_dist * map_size)
         {
             int dx = (int)(draw_x + ray_dir_x * s);
             int dy = (int)(draw_y + ray_dir_y * s);
@@ -151,7 +204,6 @@ void draw_view_ray(t_img *img, char **map)
         }
 		col++;
 	}
-
 }
 
 
@@ -194,13 +246,9 @@ void square(t_img *img, char pixel, int x, int y)
 
 
 
-
-
-
-
 void player(t_img *img, char **map)
 {
-	int size = 30;
+	int size = 64;
 	int px= (int)(img->player_x * size);
 	int py = (int)(img->player_y * size);
 	int player_size = size /2;
@@ -218,8 +266,7 @@ void player(t_img *img, char **map)
 	}
 }
 
-
-void	draw(char **map1, t_img *img)
+void	draw(t_data *data, t_img *img)
 {
 	int i;
 	int j;
@@ -227,18 +274,19 @@ void	draw(char **map1, t_img *img)
 	img->wall_directions = malloc(sizeof(char) * WIDTH);
 	
 	i = 0;
-	while (map1[i])
+	while (data->content[i])
 	{
 		j = 0;
-		while (map1[i][j])
+		while (data->content[i][j])
 		{
-			square(img, map1[i][j], j, i);
+			square(img, data->content[i][j], j, i);
 			j++;
 		}
 		i++;
 	}
-	player(img, map1);
-	draw_view_ray(img, map1);
+	player(img, data->content);
+	draw_view_ray(img, data->content);
+	
 	draw_3d_walls(img);
 	
 }
@@ -368,7 +416,7 @@ int move_player(t_data *data)
 	data->img->img_ptr = mlx_new_image(data->img->mlx, WIDTH, HEIGHT);
 	data->img->addr = mlx_get_data_addr(data->img->img_ptr, &data->img->bpp, &data->img->size_line, &data->img->endian);
 
-	draw(data->content, data->img); 
+	draw(data, data->img); 
 
 	mlx_put_image_to_window(data->img->mlx, data->img->win, data->img->img_ptr, 0, 0);
 
