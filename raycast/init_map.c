@@ -6,13 +6,13 @@
 /*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:30:42 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/05 20:05:49 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/05 20:14:55 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-#define PLAYER_SPEED 0.06
+#define PLAYER_SPEED 0.05
 
 
 double	rad(double angle)
@@ -295,7 +295,7 @@ void	draw(t_data *data, t_img *img)
 		}
 		i++;
 	}
-	player(img, data->content);
+	// player(img, data->content);
 	draw_view_ray(img, data->content);
 	
 	draw_3d_walls(data);

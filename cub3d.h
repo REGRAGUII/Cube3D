@@ -6,7 +6,7 @@
 /*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:57 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/05/05 20:10:42 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/05 20:14:14 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1000
 
-#define HEIGHT 1440
-#define WIDTH 1080
+#define HEIGHT 1080
+#define WIDTH 1440
 #define PI 3.14159265358979323846
 
 #include <math.h>
