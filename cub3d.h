@@ -6,7 +6,7 @@
 /*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:57 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/05/04 18:45:31 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/05 20:10:42 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,20 @@ typedef struct s_img
 	int		bpp;
 	int		size_line;
 	int		endian;
+	int		width;
+	int		height;
 	double		player_x;
 	double		player_y;	
 	double		player_angle;
-	int 		N;
-	int 		E;
-	int			S;
-	int			W;
+	// int 		N;
+	// int 		E;
+	// int			S;
+	// int			W;
 	char		facing;
 	char     *wall_directions;
 	  
+	int ceiling_color;
+	int floor_color;
 	
 	double *ray_distances;
 	double *ray_angles;
@@ -63,42 +67,6 @@ typedef struct s_img
 	
 
 }	t_img;
-
-typedef struct s_game
-{
-	
-	char	**map;
-	int		len;
-	char	*north;
-	char	*south;
-	char	*west;
-	char	*east;
-	int		*floor;
-	int		*ceiling;
-	int		floor_color;
-	int		ceiling_color;
-	char	*save;
-	char	pv;
-	char	*key;
-	float	view;
-	int		px;
-	int		py;
-	int		map_width;
-	int		map_height;
-	double	hit_p;
-	double	hit_p_y;
-	double	distance;
-	int		side;
-	int		color;
-	t_img	back;
-	t_img	gun;
-	t_img	wall_w;
-	t_img	wall_e;
-	t_img	wall_s;
-	t_img	wall_n;
-	
-	// t_dda	vars;
-}			t_game;
 
 
 
@@ -156,6 +124,7 @@ typedef struct c_data
 	int 	ceiling_r;
 	int		ceiling_g;
 	int		ceiling_b;
+	t_img	*wall_textures;
 	t_img	*img;
 	
 }	t_data;

@@ -6,13 +6,13 @@
 /*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:30:42 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/05 03:04:15 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/05 20:05:49 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-#define PLAYER_SPEED 0.02
+#define PLAYER_SPEED 0.06
 
 
 double	rad(double angle)
@@ -50,24 +50,17 @@ void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 
 
 
-
-void draw_3d_walls(t_img *img)
+void draw_3d_walls(t_data *data)
 {
-	int i;
-	int color ;
-	int floor_color;
-	int ceiling_color ;
-	int y;
-	
-	i = 0;
-	while (i < WIDTH)
+	int col = 0;
+
+	while (col < WIDTH)
 	{
-		double dist = img->ray_distances[i];
-		
+		double dist = data->img->ray_distances[col];
 		if (dist <= 0)
 			dist = 0.0001;
-		int line_height = (int)(HEIGHT / dist);
 
+		int line_height = (int)(HEIGHT / dist);
 		int draw_start = -line_height / 2 + HEIGHT / 2;
 		int draw_end = line_height / 2 + HEIGHT / 2;
 
@@ -76,31 +69,49 @@ void draw_3d_walls(t_img *img)
 		if (draw_end >= HEIGHT)
 			draw_end = HEIGHT - 1;
 
-		if (img->wall_directions[i] == 'N')
-			color = 0xFF0000;
-		if (img->wall_directions[i] == 'S')
-			color = 0x00FF00;
-		if (img->wall_directions[i] == 'E')
-			color = 0x0000FF;
-		if (img->wall_directions[i] == 'W')
-			color = 0xFFFF00;
-		y = 0;
-		while(y < draw_start)
+	
+		int tex_index;
+		if (data->img->wall_directions[col] == 'N') tex_index = 0;
+		else if (data->img->wall_directions[col] == 'S') tex_index = 1;
+		else if (data->img->wall_directions[col] == 'E') tex_index = 2;
+		else tex_index = 3;
+
+		t_img *tex = &data->wall_textures[tex_index];
+
+		// tex_X position in the texture
+		double wall_x;
+		if (data->img->wall_directions[col] == 'N' || data->img->wall_directions[col] == 'S')
+			wall_x = data->img->player_x + data->img->ray_distances[col] * cos(data->img->ray_angles[col]);
+		else
+			wall_x = data->img->player_y + data->img->ray_distances[col] * sin(data->img->ray_angles[col]);
+
+		wall_x -= floor(wall_x);
+		int tex_x = (int)(wall_x * (double)tex->width);
+		if (data->img->wall_directions[col] == 'W' || data->img->wall_directions[col] == 'S')
+			tex_x = tex->width - tex_x - 1;
+
+	
+		int y = 0;
+		while (y < HEIGHT)
 		{
-			my_mlx_pixel_put(img, i, y, 0xFF00FF);
-			y++;	
-		}
-		while(y < draw_end)
-		{
-			my_mlx_pixel_put(img, i, y, color);
-			y++;	
-		}
-		while(y < HEIGHT)
-		{
-			my_mlx_pixel_put(img, i, y,  0x0FFFF0F0);
+			if (y < draw_start)
+			{
+				my_mlx_pixel_put(data->img, col, y, data->img->ceiling_color);
+			}
+			else if (y >= draw_start && y <= draw_end)
+			{
+				int tex_y = ((y - draw_start) * tex->height) / (draw_end - draw_start);
+				int tex_pos = tex_y * tex->size_line + tex_x * (tex->bpp / 8);
+				int color = *(unsigned int *)(tex->addr + tex_pos);
+				my_mlx_pixel_put(data->img, col, y, color);
+			}
+			else
+			{
+				my_mlx_pixel_put(data->img, col, y, data->img->floor_color);
+			}
 			y++;
 		}
-		i++;
+		col++;
 	}
 }
 
@@ -287,7 +298,7 @@ void	draw(t_data *data, t_img *img)
 	player(img, data->content);
 	draw_view_ray(img, data->content);
 	
-	draw_3d_walls(img);
+	draw_3d_walls(data);
 	
 }
 
@@ -393,10 +404,16 @@ void move_left(t_data *data)
 		}
 	}
 }
+int get_color(int r, int g, int b)
+{
+	return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+}
 
 int move_player(t_data *data)
 {
 
+	data->img->ceiling_color = get_color(data->ceiling_r, data->ceiling_g, data->ceiling_b);
+	data->img->floor_color= get_color(data->floor_r, data->floor_g, data->floor_b);
 	if (data->img->key[65361])
 		data->img->player_angle -= 0.05;
 	if (data->img->key[65363])
@@ -447,16 +464,31 @@ void find_player_position(t_data *data)
 	}
 }
 
+void texture_loading(t_data *data)
+{
+	char *paths[4] = { data->no, data->so, data->ea, data->we };
+	int i;
+	
+	i = 0;
+	while(i < 4)
+	{
+		data->wall_textures[i].img_ptr = mlx_xpm_file_to_image(data->img->mlx, paths[i], &data->wall_textures[i].width, &data->wall_textures[i].height);
+		data->wall_textures[i].addr = mlx_get_data_addr(data->wall_textures[i].img_ptr, &data->wall_textures[i].bpp, &data->wall_textures[i].size_line, &data->wall_textures[i].endian);
+		i++;
+	}
+}
+
 
 void render(t_data *data)
 {
 	data->img = malloc(sizeof(t_img));	
-	data->img->key = malloc(sizeof(char) * 150);
+	data->img->key = malloc(sizeof(char) * 70000);
 	data->img->player_angle =0.0;
 	data->img->ray_distances = malloc(sizeof(double) * WIDTH);
 	data->img->ray_angles = malloc(sizeof(double) * WIDTH);
-	
-	ft_memset(data->img->key, 0, 150);
+	data->wall_textures = malloc(sizeof(t_img) * 4);
+
+	ft_memset(data->img->key, 0, 70000);
 	ft_memset(data->img->ray_distances, 0, WIDTH);
 	ft_memset(data->img->ray_angles, 0, WIDTH);
 
@@ -465,12 +497,12 @@ void render(t_data *data)
 	data->img->win = mlx_new_window(data->img->mlx, WIDTH, HEIGHT, "Pinky & Brain");
 	data->img->img_ptr = mlx_new_image(data->img->mlx, WIDTH, HEIGHT);
 	data->img->addr = mlx_get_data_addr(data->img->img_ptr, &data->img->bpp, &data->img->size_line, &data->img->endian);
+	texture_loading(data);
     find_player_position(data);
 	mlx_hook(data->img->win, 17, 0, end, data->img);
 	mlx_hook(data->img->win, 02, (1L << 0), key_press, data->img);
 	mlx_hook(data->img->win, 03, (1L << 1), key_release, data->img);
 	mlx_loop_hook(data->img->mlx, move_player, data);
-    // draw(data->content, data->img);
 	mlx_put_image_to_window(data->img->mlx, data->img->win, data->img->img_ptr, 0, 0);
 	mlx_loop(data->img->mlx);
 }
