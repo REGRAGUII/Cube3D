@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:57 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/05/08 15:15:34 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/08 16:58:44 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include <unistd.h>
 #include "libft/libft.h"
 #include <fcntl.h>
-// #include <mlx.h>
+#include <mlx.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "minilibx-linux/mlx.h"
+// #include "minilibx-linux/mlx.h"
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1000

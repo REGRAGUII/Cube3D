@@ -1,6 +1,6 @@
 NAME = cub3D
 
-CC = cc 
+CC = cc -fsanitize=address
 # CFLAGS = -Wall -Wextra -Werror 
 
 SRC = main.c\

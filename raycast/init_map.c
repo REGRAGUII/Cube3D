@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:30:42 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/08 15:21:43 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/08 17:16:26 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,71 +31,69 @@ int get_map_width(char *row)
 }
 
 
-// void square(t_img *img, char pixel, int x, int y)
-// {
-// 	int color;
-// 	int	i;
-// 	int	j;
-// 	int start_x;
-// 	int start_y;
-// 	int end_x;
-// 	int end_y;
-// 	int size = 30;
-// 	i = 0;
-// 	j = 0;
-// 	start_x = x * size;
-// 	start_y = y * size;
-// 	end_x = start_x + size;
-// 	end_y = start_y + size;
+void square(t_img *img, char pixel, int x, int y)
+{
+	int color;
+	int	i;
+	int	j;
+	int start_x;
+	int start_y;
+	int end_x;
+	int end_y;
+	int size = 30;
+	i = 0;
+	j = 0;
+	start_x = x * size;
+	start_y = y * size;
+	end_x = start_x + size;
+	end_y = start_y + size;
 	
-// 	if (pixel == '0')
-// 	color = 0x00000000; 
-// 	else if (pixel == '1')
-// 	color = 0xFFFFFFFF; 
-// 	i = start_x + 1;
-// 	while(i < end_x-1)
-// 	{
-// 		j = start_y+1;
-// 		while(j < end_y-1)
-// 		{
-// 			my_mlx_pixel_put(img, i, j, color);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
+	if (pixel == '0')
+	color = 0x00000000; 
+	else if (pixel == '1')
+	color = 0xFFFFFFFF; 
+	i = start_x + 1;
+	while(i < end_x-1)
+	{
+		j = start_y+1;
+		while(j < end_y-1)
+		{
+			my_mlx_pixel_put(img, i, j, color);
+			j++;
+		}
+		i++;
+	}
+}
 
 
 
 
 
-// void player(t_img *img, char **map)
-// {
-// 	int size = 64;
-// 	int px= (int)(img->player_x * size);
-// 	int py = (int)(img->player_y * size);
-// 	int player_size = size /2;
-// 	int i , j ;
-// 	i = py ;
-// 	while(i < py + player_size)
-// 	{
-// 		j = px ;
-// 		while(j < px + player_size)
-// 		{
-// 			my_mlx_pixel_put(img, j, i, 0x0000FFFF);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
+void player(t_img *img, char **map)
+{
+	int size = 64;
+	int px= (int)(img->player_x * size);
+	int py = (int)(img->player_y * size);
+	int player_size = size /2;
+	int i , j ;
+	i = py ;
+	while(i < py + player_size)
+	{
+		j = px ;
+		while(j < px + player_size)
+		{
+			my_mlx_pixel_put(img, j, i, 0x0000FFFF);
+			j++;
+		}
+		i++;
+	}
+}
 
 void	draw(t_data *data, t_img *img)
 {
 	int i;
 	int j;
 
-	img->wall_directions = malloc(sizeof(char) * WIDTH);
-	
 	i = 0;
 	while (data->content[i])
 	{
@@ -331,6 +329,7 @@ void render(t_data *data)
 	data->img->player_angle =0.0;
 	data->img->ray_distances = malloc(sizeof(double) * WIDTH);
 	data->img->ray_angles = malloc(sizeof(double) * WIDTH);
+	data->img->wall_directions = malloc(sizeof(char) * WIDTH);
 	data->wall_textures = malloc(sizeof(t_img) * 4);
 	ft_memset(data->img->key, 0, 150);
 	ft_memset(data->img->ray_distances, 0, WIDTH);
