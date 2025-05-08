@@ -14,7 +14,8 @@ SRC = main.c\
 	parsing/verify_utils.c\
 	parsing/map_parsing.c\
 	raycast/init_map.c\
-	
+	raycast/draw_3d_walls.c\
+	raycast/dda.c\
 
 
 OBJ = $(SRC:.c=.o)

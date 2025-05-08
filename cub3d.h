@@ -6,7 +6,7 @@
 /*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:57 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/05/05 20:14:14 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/08 15:15:34 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #define HEIGHT 1080
 #define WIDTH 1440
 #define PI 3.14159265358979323846
+#define PLAYER_SPEED 0.05
 
 #include <math.h>
 
@@ -56,16 +57,15 @@ typedef struct s_img
 	// int			S;
 	// int			W;
 	char		facing;
-	char     *wall_directions;
-	  
+	
 	int ceiling_color;
 	int floor_color;
 	
+	char     *wall_directions;
 	double *ray_distances;
 	double *ray_angles;
 	char	*key;
 	
-
 }	t_img;
 
 
@@ -84,6 +84,7 @@ typedef enum e_token
 	NOTHING, // NULL 8
 } t_token;
 
+
 typedef struct c_map
 {
 	t_token type;
@@ -91,7 +92,6 @@ typedef struct c_map
 	int	flag;
 	struct c_map *next;
 }	t_map;
-
 
 typedef struct c_data
 {
@@ -126,17 +126,32 @@ typedef struct c_data
 	int		ceiling_b;
 	t_img	*wall_textures;
 	t_img	*img;
+
 	
 }	t_data;
 
-
+typedef struct s_ray
+{
+    double angle;
+    double dir_x;
+    double dir_y;
+    int map_x;
+    int map_y;
+    double delta_dist_x;
+    double delta_dist_y;
+    int step_x;
+    int step_y;
+    double side_dist_x;
+    double side_dist_y;
+    int side;
+} t_ray;
 
 //raycasting functions
 void	render(t_data *data);
 void	draw(t_data *data, t_img *img);
-
-
-
+void	draw_3d_walls(t_data *data);
+void	draw_view_ray(t_img *img, char **map);
+void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
 //parsing functions
 void parsing(int ac, char **av, t_data *data, t_map *map);
 char	*get_next_line(int fd);

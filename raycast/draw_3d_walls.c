@@ -1,0 +1,104 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_3d_walls.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/08 15:04:07 by youssef           #+#    #+#             */
+/*   Updated: 2025/05/08 15:19:54 by youssef          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../cub3d.h"
+
+void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
+{
+		char *dst = img->addr + (y * img->size_line + x * (img->bpp / 8));
+		*(unsigned int *)dst = color;
+}
+static int	get_tex_index(char dir)
+{
+	if (dir == 'N')
+		return (0);
+	else if (dir == 'S')
+		return (1);
+	else if (dir == 'E')
+		return (2);
+	return (3);
+}
+
+static void	get_tex_coords(t_data *data, int col, int *tex_x)
+{
+	t_img	*tex;
+	double	wall_x;
+
+	tex = &data->wall_textures[get_tex_index(data->img->wall_directions[col])];
+	if (data->img->wall_directions[col] == 'N'
+		|| data->img->wall_directions[col] == 'S')
+		wall_x = data->img->player_x
+			+ data->img->ray_distances[col]
+			* cos(data->img->ray_angles[col]);
+	else
+		wall_x = data->img->player_y
+			+ data->img->ray_distances[col]
+			* sin(data->img->ray_angles[col]);
+	wall_x -= floor(wall_x);
+	*tex_x = (int)(wall_x * (double)tex->width);
+	if (data->img->wall_directions[col] == 'W'
+		|| data->img->wall_directions[col] == 'S')
+		*tex_x = tex->width - *tex_x - 1;
+}
+
+static void	draw_wall_strip(t_data *data, int col, int start, int end)
+{
+	int		y;
+	int		tex_x;
+	int		tex_y;
+	int		tex_pos;
+	int		color;
+	t_img	*tex;
+
+	tex = &data->wall_textures[get_tex_index(data->img->wall_directions[col])];
+	get_tex_coords(data, col, &tex_x);
+	y = -1;
+	while (++y < HEIGHT)
+	{
+		if (y < start)
+			my_mlx_pixel_put(data->img, col, y, data->img->ceiling_color);
+		else if (y >= start && y <= end)
+		{
+			tex_y = ((y - start) * tex->height) / (end - start);
+			tex_pos = tex_y * tex->size_line + tex_x * (tex->bpp / 8);
+			color = *(unsigned int *)(tex->addr + tex_pos);
+			my_mlx_pixel_put(data->img, col, y, color);
+		}
+		else
+			my_mlx_pixel_put(data->img, col, y, data->img->floor_color);
+	}
+}
+
+void	draw_3d_walls(t_data *data)
+{
+	int		col;
+	int		line_height;
+	int		start;
+	int		end;
+	double	dist;
+
+	col = -1;
+	while (++col < WIDTH)
+	{
+		dist = data->img->ray_distances[col];
+		if (dist <= 0)
+			dist = 0.0001;
+		line_height = (int)(HEIGHT / dist);
+		start = -line_height / 2 + HEIGHT / 2;
+		end = line_height / 2 + HEIGHT / 2;
+		// if (start < 0)
+		// 	start = 0;
+		// if (end >= HEIGHT)
+		// 	end = HEIGHT - 1;
+		draw_wall_strip(data, col, start, end);
+	}
+}
