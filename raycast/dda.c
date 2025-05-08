@@ -27,8 +27,15 @@ void init_ray_direction(t_img *img, int col, t_ray *ray)
 
 void init_step_side_dist(t_img *img, t_ray *ray)
 {
-    ray->step_x = (ray->dir_x < 0) ? -1 : 1;
-    ray->step_y = (ray->dir_y < 0) ? -1 : 1;
+    if (ray->dir_x < 0)
+		ray->step_x = -1;
+	else
+		ray->step_x = 1;
+    if (ray->dir_y < 0)
+		ray->step_y = -1;
+	else
+	    ray->step_y = 1;
+
     if (ray->step_x < 0)
         ray->side_dist_x = (img->player_x - ray->map_x) * ray->delta_dist_x;
     else
