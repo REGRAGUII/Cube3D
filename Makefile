@@ -1,7 +1,7 @@
 NAME = cub3D
 
-CC = cc -fsanitize=address
-# CFLAGS = -Wall -Wextra -Werror 
+CC = cc 
+CFLAGS = -Wall -Wextra -Werror 
 
 SRC = main.c\
 	parsing/parsing.c\

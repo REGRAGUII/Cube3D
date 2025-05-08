@@ -90,8 +90,8 @@ void draw_ray_2d(t_img *img, t_ray *ray, int col)
     int s;
     int color;
 
-    draw_x = img->player_x * 64 + 32;
-    draw_y = img->player_y * 64 + 32;
+    draw_x = img->player_x * 64 + 64/4;
+    draw_y = img->player_y * 64 + 64/4;
     perp_wall_dist = img->ray_distances[col] / cos(ray->angle - img->player_angle);
     s = 0;
     while (s < perp_wall_dist * 64)

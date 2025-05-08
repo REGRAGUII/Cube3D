@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:57 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/05/08 16:58:44 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/08 17:23:28 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #define HEIGHT 1080
 #define WIDTH 1440
 #define PI 3.14159265358979323846
-#define PLAYER_SPEED 0.05
+#define PLAYER_SPEED 0.02
 
 #include <math.h>
 

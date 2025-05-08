@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:30:42 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/08 17:16:26 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:02:15 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void square(t_img *img, char pixel, int x, int y)
 
 
 
-void player(t_img *img, char **map)
+void player(t_img *img)
 {
 	int size = 64;
 	int px= (int)(img->player_x * size);
@@ -88,7 +88,6 @@ void player(t_img *img, char **map)
 		i++;
 	}
 }
-
 void	draw(t_data *data, t_img *img)
 {
 	int i;
@@ -106,18 +105,18 @@ void	draw(t_data *data, t_img *img)
 		i++;
 	}
 	draw_view_ray(img, data->content);
-	
+	// player(img);
 	draw_3d_walls(data);
 	
 }
-void	free_textures(void *mlx, t_img *wall_textures)
+void	free_textures(void *mlx, t_img *wall_textures, int count)
 {
 	int	i;
 	
 	i = 0;
 	if (wall_textures)
 	{
-		while (i < 4)
+		while (i < count)
 		{
 			if (wall_textures[i].img_ptr)
 				mlx_destroy_image(mlx, wall_textures[i].img_ptr);
@@ -129,10 +128,6 @@ void	free_textures(void *mlx, t_img *wall_textures)
 
 void free_all(t_data *data)
 {
-	int i;
-
-	i = 0;
-	free_textures(data->img->mlx, data->wall_textures);
 	if (!data || !data->img)
 		return;
 	if(data->img->img_ptr)
@@ -157,6 +152,7 @@ void free_all(t_data *data)
 
 int	end(t_data *data)
 {
+	free_textures(data->img->mlx, data->wall_textures, 4);
 	free_all(data);
 	exit(0);
 	return (0);
@@ -315,6 +311,14 @@ void texture_loading(t_data *data)
 	{
 		data->wall_textures[i].img_ptr = mlx_xpm_file_to_image(data->img->mlx, paths[i],
 			&data->wall_textures[i].width, &data->wall_textures[i].height);
+		if (!data->wall_textures[i].img_ptr)
+		{
+			ft_putstr_fd("Error: Failed to load texture: ", 2);
+			ft_putendl_fd(paths[i], 2);
+			free_textures(data->img->mlx, data->wall_textures, i);
+			free_all(data);
+			exit(EXIT_FAILURE);
+		}
 		data->wall_textures[i].addr = mlx_get_data_addr(data->wall_textures[i].img_ptr, &data->wall_textures[i].bpp,
 			&data->wall_textures[i].size_line, &data->wall_textures[i].endian);
 		i++;
@@ -334,7 +338,6 @@ void render(t_data *data)
 	ft_memset(data->img->key, 0, 150);
 	ft_memset(data->img->ray_distances, 0, WIDTH);
 	ft_memset(data->img->ray_angles, 0, WIDTH);
-	
     data->img->mlx = mlx_init();
 	data->img->win = mlx_new_window(data->img->mlx, WIDTH, HEIGHT, "Pinky & Brain");
 	data->img->img_ptr = mlx_new_image(data->img->mlx, WIDTH, HEIGHT);
