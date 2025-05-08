@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:04:07 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/08 19:24:36 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/08 21:41:11 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 {
+	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+	{
 		char *dst = img->addr + (y * img->size_line + x * (img->bpp / 8));
 		*(unsigned int *)dst = color;
+	}
 }
+
 static int	get_tex_index(char dir)
 {
 	if (dir == 'N')

@@ -84,35 +84,19 @@ void calc_wall_dist_dir(t_img *img, t_ray *ray, int col)
     img->ray_distances[col] = perp_wall_dist * cos(ray->angle - img->player_angle);
     img->ray_angles[col] = ray->angle;
     if (ray->side == 0)
-        img->wall_directions[col] = (ray->step_x < 0) ? 'E' : 'W';
+	{
+		if(ray->step_x < 0)
+        	img->wall_directions[col] = 'W';
+		else
+			img->wall_directions[col] = 'E';
+	}
     else
-        img->wall_directions[col] = (ray->step_y < 0) ? 'S' : 'N';
-}
-
-void draw_ray_2d(t_img *img, t_ray *ray, int col)
-{
-    double draw_x;
-    double draw_y;
-    double perp_wall_dist;
-    int s;
-    int color;
-
-    draw_x = img->player_x * 64 + 64/4;
-    draw_y = img->player_y * 64 + 64/4;
-    perp_wall_dist = img->ray_distances[col] / cos(ray->angle - img->player_angle);
-    s = 0;
-    while (s < perp_wall_dist * 64)
-    {
-        int dx = (int)(draw_x + ray->dir_x * s);
-        int dy = (int)(draw_y + ray->dir_y * s);
-        color = 0xFF0000;
-        if (ray->side == 0)
-            color = (ray->step_x < 0) ? 0x00FF00 : 0x0000FF;
-        else
-            color = (ray->step_y < 0) ? 0xFFFF00 : 0xFF00FF;
-        my_mlx_pixel_put(img, dx, dy, color);
-        s++;
-    }
+	{
+		if (ray->step_y < 0)
+			img->wall_directions[col] = 'N';
+		else
+			img->wall_directions[col] = 'S';
+	}
 }
 
 void draw_view_ray(t_img *img, char **map)
@@ -127,7 +111,6 @@ void draw_view_ray(t_img *img, char **map)
         init_step_side_dist(img, &ray);
         cast_ray_to_wall(map, &ray);
         calc_wall_dist_dir(img, &ray, col);
-        draw_ray_2d(img, &ray, col);
         col++;
     }
 }
