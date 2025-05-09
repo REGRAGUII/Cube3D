@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:57 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/05/08 17:23:28 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/09 02:47:51 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ typedef enum e_token
 	NOTHING, // NULL 8
 } t_token;
 
+typedef struct s_coord
+{
+	int		tex_x;
+	int		tex_y;
+} t_coord;
 
 typedef struct c_map
 {
@@ -152,6 +157,18 @@ void	draw(t_data *data, t_img *img);
 void	draw_3d_walls(t_data *data);
 void	draw_view_ray(t_img *img, char **map);
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
+int		key_release(int keycode, t_data *data);
+int		key_press(int keycode, t_data *data);
+int		end(t_data *data);
+void	free_all(t_data *data);
+void	free_textures(void *mlx, t_img *wall_textures, int count);
+int		move_player(t_data *data);
+int		get_color(int r, int g, int b);
+void	find_player_position(t_data *data);
+void player_facing(t_img *img);
+
+
+
 //parsing functions
 void parsing(int ac, char **av, t_data *data, t_map *map);
 char	*get_next_line(int fd);

@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:04:07 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/08 21:41:11 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/09 02:59:18 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 {
+	char	*dst;
+
 	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 	{
-		char *dst = img->addr + (y * img->size_line + x * (img->bpp / 8));
+		dst = img->addr + (y * img->size_line + x * (img->bpp / 8));
 		*(unsigned int *)dst = color;
 	}
 }
@@ -56,15 +58,14 @@ static void	get_tex_coords(t_data *data, int col, int *tex_x)
 
 static void	draw_wall_strip(t_data *data, int col, int start, int end)
 {
+	t_coord	vect;
+	t_img	*tex;
 	int		y;
-	int		tex_x;
-	int		tex_y;
 	int		tex_pos;
 	int		color;
-	t_img	*tex;
 
 	tex = &data->wall_textures[get_tex_index(data->img->wall_directions[col])];
-	get_tex_coords(data, col, &tex_x);
+	get_tex_coords(data, col, &vect.tex_x);
 	y = -1;
 	while (++y < HEIGHT)
 	{
@@ -72,8 +73,8 @@ static void	draw_wall_strip(t_data *data, int col, int start, int end)
 			my_mlx_pixel_put(data->img, col, y, data->img->ceiling_color);
 		else if (y >= start && y <= end)
 		{
-			tex_y = ((y - start) * tex->height) / (end - start);
-			tex_pos = tex_y * tex->size_line + tex_x * (tex->bpp / 8);
+			vect.tex_y = ((y - start) * tex->height) / (end - start);
+			tex_pos = vect.tex_y * tex->size_line + vect.tex_x * (tex->bpp / 8);
 			color = *(unsigned int *)(tex->addr + tex_pos);
 			my_mlx_pixel_put(data->img, col, y, color);
 		}
@@ -99,10 +100,6 @@ void	draw_3d_walls(t_data *data)
 		line_height = (int)(HEIGHT / dist);
 		start = -line_height / 2 + HEIGHT / 2;
 		end = line_height / 2 + HEIGHT / 2;
-		// if (start < 0)
-		// 	start = 0;
-		// if (end >= HEIGHT)
-		// 	end = HEIGHT - 1;
 		draw_wall_strip(data, col, start, end);
 	}
 }

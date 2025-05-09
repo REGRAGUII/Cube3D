@@ -16,7 +16,9 @@ SRC = main.c\
 	raycast/init_map.c\
 	raycast/draw_3d_walls.c\
 	raycast/dda.c\
-
+	raycast/ft_exit.c\
+	raycast/movement.c\
+	raycast/utils.c\
 
 OBJ = $(SRC:.c=.o)
 
