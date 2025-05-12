@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:13:25 by yregragu          #+#    #+#             */
-/*   Updated: 2025/05/09 03:41:37 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/12 20:03:36 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,5 @@ int	move_player(t_data *data)
 	draw(data, data->img);
 	mlx_put_image_to_window(data->img->mlx,
 		data->img->win, data->img->img_ptr, 0, 0);
-	return (1);
+	return (0);
 }

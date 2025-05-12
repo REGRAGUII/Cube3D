@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:30:42 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/09 03:32:05 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/12 21:51:37 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	texture_loading(t_data *data)
 void	initialization(t_data *data)
 {
 	data->img = malloc(sizeof(t_img));
+	data->img->hit_x = malloc(WIDTH * sizeof(double));
+	data->img->hit_y = malloc(WIDTH * sizeof(double));
 	data->img->key = malloc(sizeof(char) * 150);
 	data->img->player_angle = 0.0;
 	data->img->ray_distances = malloc(sizeof(double) * WIDTH);

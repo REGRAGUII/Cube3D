@@ -3,39 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   verify_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rboulaga <rboulaga@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 16:55:20 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/04/28 18:50:50 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/12 06:27:40 by rboulaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-int	rgb_help(char *str)
-{
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (str[i] == ',')
-			j++;
-		i++;
-	}
-	return (j);
-}
-
 void	check_c_rgb(t_data *data, t_map *map)
 {
-	char **colors_c;
+	char	**colors_c;
 
 	colors_c = ft_split(data->c, ',');
 	if (!colors_c[0] || !colors_c[1] || !colors_c[2])
 	{
-		free(colors_c);
+		free_list(colors_c);
 		free_map(map);
 		free(data->content);
 		my_exit(data, "Invalid RGB color format\n");
@@ -44,8 +28,7 @@ void	check_c_rgb(t_data *data, t_map *map)
 	data->ceiling_g = rgb_atoi(colors_c[1]);
 	data->ceiling_b = rgb_atoi(colors_c[2]);
 	free_list(colors_c);
-	if (data->ceiling_r == -1 || data->ceiling_g == -1
-		|| data->ceiling_b == -1)
+	if (data->ceiling_r == -1 || data->ceiling_g == -1 || data->ceiling_b == -1)
 	{
 		free_map(map);
 		free(data->content);
@@ -55,12 +38,12 @@ void	check_c_rgb(t_data *data, t_map *map)
 
 void	check_f_rgb(t_data *data, t_map *map)
 {
-	char **colors_f;
+	char	**colors_f;
 
 	colors_f = ft_split(data->f, ',');
 	if (!colors_f[0] || !colors_f[1] || !colors_f[2])
 	{
-		free(colors_f);
+		free_list(colors_f);
 		free_map(map);
 		free(data->content);
 		my_exit(data, "Invalid RGB color format\n");
@@ -69,8 +52,7 @@ void	check_f_rgb(t_data *data, t_map *map)
 	data->floor_g = rgb_atoi(colors_f[1]);
 	data->floor_b = rgb_atoi(colors_f[2]);
 	free_list(colors_f);
-	if (data->floor_r == -1 || data->floor_g == -1
-		|| data->floor_b == -1)
+	if (data->floor_r == -1 || data->floor_g == -1 || data->floor_b == -1)
 	{
 		free_map(map);
 		free(data->content);
@@ -78,24 +60,29 @@ void	check_f_rgb(t_data *data, t_map *map)
 	}
 }
 
-void	check_access(t_data *data, t_map *map)
+void	textures(char *s, t_data *data, t_map *map)
 {
-	int i;
+	int	fd;
 
-	i = 0;
-	if (access(data->ea, F_OK) != 0
-		|| access(data->we, F_OK) != 0
-		|| access(data->so, F_OK) != 0
-		|| access(data->no, F_OK) != 0
-		|| access(data->no, R_OK) != 0
-		|| access(data->so, R_OK) != 0
-		|| access(data->we, R_OK) != 0
-		|| access(data->ea, R_OK) != 0)
+	fd = open(s, O_RDONLY);
+	if (fd == -1)
 	{
 		free_map(map);
 		free(data->content);
-		my_exit(data, "File does not exist or permission denied\n");
+		my_exit(data, "Texture file does not exist or permission is denied\n");
 	}
+	close(fd);
+}
+
+void	check_access(t_data *data, t_map *map)
+{
+	int	i;
+
+	i = 0;
+	textures(data->we, data, map);
+	textures(data->ea, data, map);
+	textures(data->so, data, map);
+	textures(data->no, data, map);
 	while (data->content[i])
 	{
 		remove_newline(data->content[i]);
@@ -103,31 +90,14 @@ void	check_access(t_data *data, t_map *map)
 	}
 }
 
-
-char	*helper(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i] && ft_isalpha(str[i]))
-		i++;
-	while(str[i] && (str[i] == ' ' || str[i] == '	'))
-		i++;
-	str = &str[i];
-	return (str);
-}
-
 void	preparing_elements(t_data *data, t_map *map)
 {
-	int i;
-
-	i = 0;
-	data->no = helper(data->no);
-	data->so = helper(data->so);
-	data->ea = helper(data->ea);
-	data->we = helper(data->we);
-	data->f = helper(data->f);
-	data->c = helper(data->c);
+	data->no = helper(data->no, data, map);
+	data->so = helper(data->so, data, map);
+	data->ea = helper(data->ea, data, map);
+	data->we = helper(data->we, data, map);
+	data->f = helper(data->f, data, map);
+	data->c = helper(data->c, data, map);
 	remove_newline(data->no);
 	remove_newline(data->ea);
 	remove_newline(data->we);

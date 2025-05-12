@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   image.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rboulaga <rboulaga@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 02:07:22 by youssef           #+#    #+#             */
-/*   Updated: 2025/04/29 02:07:32 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/12 06:31:45 by rboulaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
 
 t_img	new_img(int w, int h, t_game *game)
 {

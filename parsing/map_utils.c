@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rboulaga <rboulaga@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 10:28:46 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/04/28 18:50:50 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/12 06:20:02 by rboulaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,45 @@
 
 long long	rgb_atoi(const char *str)
 {
-	int	i;
+	int			i;
 	long long	res;
 
 	i = 0;
 	res = 0;
 	if (!str)
-		return -1;
-	while (str[i])
+		return (-1);
+	while (str[i] && is_space(str[i]))
+		i++;
+	while (str[i] && is_space(str[i]) == 0)
 	{
 		if (str[i] >= '0' && str[i] <= '9')
 			res = (res * 10) + (str[i] - 48);
 		else
-			return -1;
+			return (-1);
 		i++;
 	}
+	while (str[i] && is_space(str[i]))
+		i++;
+	if (str[i] != '\0')
+		return (-1);
 	if (res < 0 || res > 255)
 		return (-1);
 	return (res);
 }
 
-void remove_newline(char *str)
+void	remove_newline(char *str)
 {
-	int i;
-
+	int	i;
 
 	i = 0;
 	if (!str)
-		return;
-
+		return ;
 	while (str[i])
 	{
 		if (str[i] == '\n')
 		{
 			str[i] = '\0';
-			return;
+			return ;
 		}
 		i++;
 	}
@@ -58,7 +62,7 @@ t_map	*map_lstlast(t_map *lst)
 {
 	if (!lst)
 		return (NULL);
-	while ( lst->next)
+	while (lst->next)
 	{
 		lst = lst->next;
 	}

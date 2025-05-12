@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:36:17 by yregragu          #+#    #+#             */
-/*   Updated: 2025/05/09 02:38:26 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:16:58 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	init_ray_direction(t_img *img, int col, t_ray *ray)
 {
-	ray->angle = img->player_angle - (FOV_ANGLE / 2.0)
-		+ (FOV_ANGLE * col / WIDTH);
+	ray->angle = img->player_angle - ((PI / 3) / 2.0)
+		+ ((PI / 3) * col / WIDTH);
 	ray->dir_x = cos(ray->angle);
 	ray->dir_y = sin(ray->angle);
 	ray->map_x = (int)img->player_x;
@@ -86,6 +86,7 @@ void	calc_wall_dist_dir(t_img *img, t_ray *ray, int col)
 	img->ray_angles[col] = ray->angle;
 	if (ray->side == 0)
 	{
+		wall_hit_point(img, ray, col, perp_wall_dist);
 		if (ray->step_x < 0)
 			img->wall_directions[col] = 'W';
 		else
@@ -93,6 +94,7 @@ void	calc_wall_dist_dir(t_img *img, t_ray *ray, int col)
 	}
 	else
 	{
+		wall_hit_point(img, ray, col, perp_wall_dist);
 		if (ray->step_y < 0)
 			img->wall_directions[col] = 'N';
 		else

@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:04:07 by youssef           #+#    #+#             */
-/*   Updated: 2025/05/09 02:59:18 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/12 21:51:06 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,20 @@ static int	get_tex_index(char dir)
 	return (3);
 }
 
-static void	get_tex_coords(t_data *data, int col, int *tex_x)
+static void	get_tex_coords(t_data *data, int col, int *tex_x, t_img *tex)
 {
-	t_img	*tex;
-	double	wall_x;
+	double	coord_x;
 
-	tex = &data->wall_textures[get_tex_index(data->img->wall_directions[col])];
 	if (data->img->wall_directions[col] == 'N'
 		|| data->img->wall_directions[col] == 'S')
-		wall_x = data->img->player_x
-			+ data->img->ray_distances[col]
-			* cos(data->img->ray_angles[col]);
+		coord_x = data->img->hit_x[col] - floor(data->img->hit_x[col]);
 	else
-		wall_x = data->img->player_y
-			+ data->img->ray_distances[col]
-			* sin(data->img->ray_angles[col]);
-	wall_x -= floor(wall_x);
-	*tex_x = (int)(wall_x * (double)tex->width);
+		coord_x = data->img->hit_y[col] - floor(data->img->hit_y[col]);
+	*tex_x = (int)(coord_x * (double)tex->width);
 	if (data->img->wall_directions[col] == 'W'
 		|| data->img->wall_directions[col] == 'S')
 		*tex_x = tex->width - *tex_x - 1;
+	*tex_x = fmin(fmax(0, *tex_x), tex->width - 1);
 }
 
 static void	draw_wall_strip(t_data *data, int col, int start, int end)
@@ -65,7 +59,7 @@ static void	draw_wall_strip(t_data *data, int col, int start, int end)
 	int		color;
 
 	tex = &data->wall_textures[get_tex_index(data->img->wall_directions[col])];
-	get_tex_coords(data, col, &vect.tex_x);
+	get_tex_coords(data, col, &vect.tex_x, tex);
 	y = -1;
 	while (++y < HEIGHT)
 	{

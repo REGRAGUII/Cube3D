@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parse_elements.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rboulaga <rboulaga@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 07:36:44 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/04/28 18:50:50 by youssef          ###   ########.fr       */
+/*   Updated: 2025/05/12 06:21:24 by rboulaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-void free_map(t_map *map)
+void	free_map(t_map *map)
 {
-	t_map *temp;
+	t_map	*temp;
+
 	while (map)
 	{
 		temp = map->next;
@@ -23,18 +24,18 @@ void free_map(t_map *map)
 		map = temp;
 	}
 }
+
 void	check_arranging(t_data *data, t_map *map)
 {
-	int i;
-	t_map *tmp;
+	int		i;
+	t_map	*tmp;
 
 	tmp = map;
 	i = 0;
-	while(map->next && map->type != MAPP)
+	while (map->next && map->type != MAPP)
 	{
-		if (map->type == NO || map->type == SO
-			|| map->type == WE || map->type == EA
-			|| map->type == F || map->type == C)
+		if (map->type == NO || map->type == SO || map->type == WE
+			|| map->type == EA || map->type == F || map->type == C)
 			i++;
 		else if (map->type == NOTHING)
 		{
@@ -65,7 +66,7 @@ void	check_number_of_elements(t_map *map, t_data *data)
 {
 	while (map->next)
 	{
-		if(map->type == 0)
+		if (map->type == 0)
 			data->flag_no += 1;
 		else if (map->type == 1)
 			data->flag_so += 1;

@@ -6,7 +6,7 @@
 /*   By: rboulaga <rboulaga@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 23:28:31 by rboulaga          #+#    #+#             */
-/*   Updated: 2025/03/15 07:00:43 by rboulaga         ###   ########.fr       */
+/*   Updated: 2025/05/12 06:33:04 by rboulaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strdup(const char *s)
 	char	*string;
 
 	if (!s)
-		return 0;
+		return (0);
 	len = ft_strlen(s);
 	i = 0;
 	string = (char *)malloc(sizeof(char) * (len + 1));

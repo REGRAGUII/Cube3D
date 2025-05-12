@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rboulaga <rboulaga@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:07:56 by yregragu          #+#    #+#             */
-/*   Updated: 2025/05/09 03:03:37 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/11 06:48:41 by rboulaga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ int	end(t_data *data)
 {
 	free_textures(data->img->mlx, data->wall_textures, 4);
 	free_all(data);
+	free_map(data->map_struct);
+	free(data->content);
+	free(data);
 	exit(0);
 	return (0);
 }
