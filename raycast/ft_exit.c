@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 02:07:56 by yregragu          #+#    #+#             */
-/*   Updated: 2025/05/12 22:22:29 by yregragu         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:24:41 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,12 @@ void	free_all(t_data *data)
 		free(data->img->ray_angles);
 	if (data->img->wall_directions)
 		free(data->img->wall_directions);
-	free_map(data->map_struct);
-	free(data->content);
 	free(data->img->hit_x);
 	free(data->img->hit_y);
-	free(data->img), free(data);
+	free_map(data->map_struct);
+	free(data->content);
+	free(data->img);
+	free(data);
 }
 
 int	end(t_data *data)
